@@ -38,10 +38,15 @@ jobs:
           unzip -q /tmp/gradle.zip -d /tmp
           echo "/tmp/gradle-8.11.1/bin" >> "$GITHUB_PATH"
 
-      - name: Configure AndroidX
+      - name: Configure AndroidX and JVM
         run: |
           echo "android.useAndroidX=true" >> "$PROJECT_DIR/gradle.properties"
           echo "android.enableJetifier=true" >> "$PROJECT_DIR/gradle.properties"
+          echo "kotlin.jvm.target.validation.mode=warning" >> "$PROJECT_DIR/gradle.properties"
+
+          find "$PROJECT_DIR" -name "build.gradle" -type f -exec sed -i '/android {/a\    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }' {} +
+
+          find "$PROJECT_DIR" -name "build.gradle.kts" -type f -exec sed -i '/android {/a\    compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }' {} +
 
       - name: Build APK
         run: |
