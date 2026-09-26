@@ -38,6 +38,10 @@ jobs:
           unzip -q /tmp/gradle.zip -d /tmp
           echo "/tmp/gradle-8.11.1/bin" >> "$GITHUB_PATH"
 
+      - name: Configure Java 17
+        run: |
+          echo "org.gradle.java.home=$JAVA_HOME" > "$PROJECT_DIR/gradle.properties"
+
       - name: Build APK
         run: |
           cd "$PROJECT_DIR"
